@@ -34,11 +34,9 @@ static class Location
 {
     public async static Task<GeoPosition> GetLocation(HttpClient httpClient)
     {
-        // Get the IP address
-        var IP = await GetIP(httpClient);
         Console.WriteLine("Getting location...");
         // Get the location data
-        var locationData = await httpClient.GetFromJsonAsync<LocationData>($"http://ip-api.com/json/{IP}");
+        var locationData = await httpClient.GetFromJsonAsync<LocationData>($"http://ip-api.com/json/");
         // Return the location
         GeoPosition geoPosition = new GeoPosition();
         if (locationData != null)
@@ -51,20 +49,5 @@ static class Location
         }
 
         return geoPosition;
-    }
-
-    async static Task<string> GetIP(HttpClient httpClient)
-    {
-        // Pattern to find IPv4 addresses
-        string pattern = @"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?::(\d|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5]))?";
-        Console.WriteLine("Getting IP address...");
-        // Get the IP address
-        var IPData = await ((await httpClient.GetAsync("http://checkip.dyndns.org/"))
-            .Content.ReadAsStringAsync());
-        Console.WriteLine("Matching IP address...");
-        // Match the IP address
-        var match = Regex.Match(IPData, pattern);
-        Console.WriteLine($"IPv4 address is {match.Value}");
-        return match.Value;
     }
 }
